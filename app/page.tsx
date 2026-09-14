@@ -138,6 +138,10 @@ const content = {
     celebratingNow: "Celebrating Today! 🎂",
     popCelebration: "Pop ✨",
 
+    // Ambient Music
+    musicLabel: "Music",
+    musicMuted: "Muted",
+
     // Footer - exactly as requested: "built with love by daddy cool and cool mama's"
     footerLove: "built with love by",
     footerDad: "daddy cool",
@@ -184,6 +188,10 @@ const content = {
     secsUnit: "நொடி",
     celebratingNow: "இன்று பிறந்தநாள் விழா! 🎂",
     popCelebration: "கொண்டாட்டம் ✨",
+
+    // Ambient Music
+    musicLabel: "இசை",
+    musicMuted: "நிறுத்தம்",
 
     // Footer
     footerLove: "அன்புடன் உருவாக்கியவர்கள்",
@@ -377,6 +385,12 @@ function HorizontalScrollLoader({ onComplete }: { onComplete: () => void }) {
   )
 }
 
+/* ─── Birthday Song Audio Tracks (English & Tamil) ─── */
+const AUDIO_TRACKS: Record<"en" | "ta", string> = {
+  en: "/the_mountain-happy-birthday-508020.mp3",
+  ta: "/the_mountain-happy-birthday-576570.mp3",
+}
+
 /* ─── Birthday Countdown Calculator ─── */
 interface TimeRemaining {
   days: number
@@ -412,6 +426,10 @@ export default function Page() {
   const [timeLeft, setTimeLeft] = React.useState<TimeRemaining>(calculateDurationLeft)
   const [isCountdownPulsing, setIsCountdownPulsing] = React.useState(false)
 
+  // Background Ambient Music with Language Awareness & Mild Loop
+  const [isMusicPlaying, setIsMusicPlaying] = React.useState(true)
+  const audioRef = React.useRef<HTMLAudioElement | null>(null)
+
   // Interactive Story Spotlight Index with AUTOPLAY ON BY DEFAULT
   const [activeStoryIdx, setActiveStoryIdx] = React.useState(0)
   const [isAutoPlaying, setIsAutoPlaying] = React.useState(true)
@@ -426,6 +444,63 @@ export default function Page() {
   const heroParallax = useTransform(scrollYProgress, [0, 0.35], [0, -70])
   const cakeParallax = useTransform(scrollYProgress, [0, 0.35], [0, 50])
   const bgParallax = useTransform(scrollYProgress, [0, 1], [0, 180])
+
+  // Initialize and auto-play background music softly in loop
+  React.useEffect(() => {
+    const audio = new Audio(AUDIO_TRACKS[lang])
+    audio.loop = true
+    audio.volume = 0.28 // Very smooth and mild background volume
+    audioRef.current = audio
+
+    const playAttempt = () => {
+      audio.play().catch(() => {
+        // Modern browser autoplay policies require user interaction
+        const startOnFirstGesture = () => {
+          audio.play().catch(() => {})
+          window.removeEventListener("pointerdown", startOnFirstGesture)
+          window.removeEventListener("keydown", startOnFirstGesture)
+        }
+        window.addEventListener("pointerdown", startOnFirstGesture, { once: true })
+        window.addEventListener("keydown", startOnFirstGesture, { once: true })
+      })
+    }
+
+    playAttempt()
+
+    return () => {
+      audio.pause()
+      audio.src = ""
+    }
+  }, [])
+
+  // Smoothly switch track when user switches between English and Tamil
+  React.useEffect(() => {
+    const audio = audioRef.current
+    if (!audio) return
+    const targetSrc = AUDIO_TRACKS[lang]
+    if (!audio.src.endsWith(targetSrc)) {
+      const wasPlaying = !audio.paused
+      audio.src = targetSrc
+      audio.loop = true
+      audio.volume = 0.28
+      if (wasPlaying && isMusicPlaying) {
+        audio.play().catch(() => {})
+      }
+    }
+  }, [lang, isMusicPlaying])
+
+  const toggleMusic = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    const audio = audioRef.current
+    if (!audio) return
+    if (isMusicPlaying) {
+      audio.pause()
+      setIsMusicPlaying(false)
+    } else {
+      audio.play().catch(() => {})
+      setIsMusicPlaying(true)
+    }
+  }
 
   // Live countdown timer ticking every second
   React.useEffect(() => {
@@ -453,10 +528,13 @@ export default function Page() {
     window.dispatchEvent(event)
   }, [])
 
-  // Handle Entrance from Loader -> Fire initial celebratory birthday pop!
+  // Handle Entrance from Loader -> Fire initial celebratory birthday pop & resume music if paused
   const handleEntranceComplete = () => {
     setHasEntered(true)
     setPopTriggerKey(Date.now())
+    if (isMusicPlaying && audioRef.current?.paused) {
+      audioRef.current.play().catch(() => {})
+    }
   }
 
   // Handle Birthday Pop & Hearts celebration
@@ -575,32 +653,49 @@ export default function Page() {
             <span className="card-ornament-frame" aria-hidden="true" />
 
             <div className="card-content">
-              {/* Top Nav: Eyebrow + Language Switcher */}
+              {/* Top Nav: Eyebrow + Music Control + Language Switcher */}
               <div className="card-top-nav">
                 <span className="invite-eyebrow">
                   <Sparkles size={11} className="inline mr-1" />
                   {t.eyebrow}
                 </span>
 
-                <div className="lang-switcher" role="radiogroup" aria-label="Select Language">
+                <div className="card-nav-actions">
                   <button
                     type="button"
-                    className={`lang-btn ${lang === "en" ? "is-active" : ""}`}
-                    onClick={() => setLang("en")}
-                    aria-checked={lang === "en"}
-                    role="radio"
+                    className={`ambient-music-btn ${isMusicPlaying ? "is-playing" : "is-muted"}`}
+                    onClick={toggleMusic}
+                    title={isMusicPlaying ? t.musicLabel : t.musicMuted}
+                    aria-label="Toggle background birthday song"
                   >
-                    English
+                    <div className="equalizer-bars" aria-hidden="true">
+                      <span className="equalizer-bar" />
+                      <span className="equalizer-bar" />
+                      <span className="equalizer-bar" />
+                    </div>
+                    <span>{isMusicPlaying ? t.musicLabel : t.musicMuted}</span>
                   </button>
-                  <button
-                    type="button"
-                    className={`lang-btn ${lang === "ta" ? "is-active" : ""}`}
-                    onClick={() => setLang("ta")}
-                    aria-checked={lang === "ta"}
-                    role="radio"
-                  >
-                    தமிழ்
-                  </button>
+
+                  <div className="lang-switcher" role="radiogroup" aria-label="Select Language">
+                    <button
+                      type="button"
+                      className={`lang-btn ${lang === "en" ? "is-active" : ""}`}
+                      onClick={() => setLang("en")}
+                      aria-checked={lang === "en"}
+                      role="radio"
+                    >
+                      English
+                    </button>
+                    <button
+                      type="button"
+                      className={`lang-btn ${lang === "ta" ? "is-active" : ""}`}
+                      onClick={() => setLang("ta")}
+                      aria-checked={lang === "ta"}
+                      role="radio"
+                    >
+                      தமிழ்
+                    </button>
+                  </div>
                 </div>
               </div>
 
