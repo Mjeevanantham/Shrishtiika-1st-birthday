@@ -1,22 +1,101 @@
 "use client"
 
 import * as React from "react"
-import { MapPin, Heart, Sparkles } from "lucide-react"
+import { MapPin, Heart, Sparkles, ChevronLeft, ChevronRight, Play, Pause, Shuffle } from "lucide-react"
 import { motion, AnimatePresence, useScroll, useTransform } from "motion/react"
 import { CursorProvider, HeartCursor, ClickHearts } from "@/components/ui/cursor"
 import { DraggableCardBody, DraggableCardContainer } from "@/components/ui/draggable-card"
+import { BirthdayPop } from "@/components/ui/birthday-pop"
 
-/* ─── Baby portrait URLs ─── */
+/* ─── Baby Portraits with EXACT Matched Captions & Milestones ─── */
 const portraits = [
-  { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Joyful%20Baby%20Girl%20in%20Floral%20Tulle%20Dress-bOHV5mIIJy70rElIXHefU0aUkq1Jzh.png", alt: "Shrishtiika in a floral dress" },
-  { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Smiling%20Baby%20Cuddling%20a%20Teddy%20Bear-04te7UnbPa1sSucEkeYB5qCP3Stv6j.png", alt: "Shrishtiika cuddling a teddy bear" },
-  { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Joyful%20Pink%20Frosting%20Cake%20Smash-qNDdAcN7BSpGLVS9doyuJEgAUdJdHK.png", alt: "Shrishtiika enjoying birthday cake" },
-  { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Joyful%20Baby%20Girl%20Waving%20in%20Lace%20Dress-pk4BKGWg9C4gVoU3hMkMxf1hlc3XQ7.png", alt: "Shrishtiika waving" },
-  { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Giggling%20Baby%20in%20Pink%20Tulle%20Dress-UurT4VBbfBa7pePuOHyydmWe3fY6uC.png", alt: "Shrishtiika giggling" },
-  { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Adorable%20Baby%20in%20Pink%20Frills-lcA6rrKOnuzSIvVxiiEBz0JcJQ5M48.png", alt: "Shrishtiika smiling" },
+  {
+    id: "princess",
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Joyful%20Baby%20Girl%20in%20Floral%20Tulle%20Dress-bOHV5mIIJy70rElIXHefU0aUkq1Jzh.png",
+    alt: "Shrishtiika in floral tulle dress with arms up",
+    tagEn: "Little Princess",
+    tagTa: "சின்ன இளவரசி",
+    captionEn: "pure happiness",
+    captionTa: "பேரின்பம்",
+    descEn: "Arms wide open, welcoming 365 days of unconditional love and laughter.",
+    descTa: "அன்பையும் மகிழ்ச்சியையும் வாரி வழங்கும் எங்கள் வீட்டு குட்டி தேவதை.",
+    milestoneEn: "Month 1",
+    milestoneTa: "1-வது மாதம்",
+    icon: "🌸",
+  },
+  {
+    id: "cuddles",
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Smiling%20Baby%20Cuddling%20a%20Teddy%20Bear-04te7UnbPa1sSucEkeYB5qCP3Stv6j.png",
+    alt: "Shrishtiika cuddling a teddy bear",
+    tagEn: "Teddy Hugs",
+    tagTa: "கரடிப் பொம்மை",
+    captionEn: "best cuddles",
+    captionTa: "அன்புக் கட்டிப்பிடி",
+    descEn: "Holding her favorite fluffy companion with the warmest cozy hugs.",
+    descTa: "தன்னுடைய ஆசை கரடிப் பொம்மையை பாசத்தோடு அணைத்துக்கொண்ட தருணம்.",
+    milestoneEn: "Month 3",
+    milestoneTa: "3-வது மாதம்",
+    icon: "🧸",
+  },
+  {
+    id: "cake",
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Joyful%20Pink%20Frosting%20Cake%20Smash-qNDdAcN7BSpGLVS9doyuJEgAUdJdHK.png",
+    alt: "Shrishtiika enjoying birthday cake smash",
+    tagEn: "Cake Smash",
+    tagTa: "கேக் கொண்டாட்டம்",
+    captionEn: "cake everywhere",
+    captionTa: "கேக் கொண்டாட்டம்",
+    descEn: "Pink frosting, sweet messy hands, and the happiest birthday celebration giggle!",
+    descTa: "இனிப்பான இளஞ்சிவப்பு கேக் சுவைத்து மகிழ்ந்த செல்லக் குறும்பு சிரிப்பு!",
+    milestoneEn: "Month 12",
+    milestoneTa: "12-வது மாதம்",
+    icon: "🎂",
+  },
+  {
+    id: "wave",
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Joyful%20Baby%20Girl%20Waving%20in%20Lace%20Dress-pk4BKGWg9C4gVoU3hMkMxf1hlc3XQ7.png",
+    alt: "Shrishtiika waving in delicate lace dress",
+    tagEn: "First Wave",
+    tagTa: "முதல் அசைவு",
+    captionEn: "hello, world",
+    captionTa: "வணக்கம் உலகம்",
+    descEn: "A tiny hand waving to everyone with curiosity and sparkling bright eyes.",
+    descTa: "தன் குட்டி விரல்களால் உலகிற்கு வணக்கம் சொல்லும் அழகிய மழலை தருணம்.",
+    milestoneEn: "Month 6",
+    milestoneTa: "6-வது மாதம்",
+    icon: "👋",
+  },
+  {
+    id: "giggles",
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Giggling%20Baby%20in%20Pink%20Tulle%20Dress-UurT4VBbfBa7pePuOHyydmWe3fY6uC.png",
+    alt: "Shrishtiika giggling with hands covering mouth",
+    tagEn: "Cheeky Giggles",
+    tagTa: "மழலைச் சிரிப்பு",
+    captionEn: "the sweetest smile",
+    captionTa: "முதல் புன்னகை",
+    descEn: "Covering her mouth in infectious laughter that brightens every single room.",
+    descTa: "தன் வாயை மூடி குறும்புடன் சிரிக்கும் எங்களின் இதயத்துடிப்பு புன்னகை.",
+    milestoneEn: "Month 9",
+    milestoneTa: "9-வது மாதம்",
+    icon: "😊",
+  },
+  {
+    id: "dreamer",
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Adorable%20Baby%20in%20Pink%20Frills-lcA6rrKOnuzSIvVxiiEBz0JcJQ5M48.png",
+    alt: "Shrishtiika smiling gently in pink frills",
+    tagEn: "Sweet Dreamer",
+    tagTa: "அன்புக் கனவு",
+    captionEn: "growing with love",
+    captionTa: "அன்பில் வளர்கிறாள்",
+    descEn: "Gentle smiles and peaceful thoughts, wrapped in rosy lace and warmth.",
+    descTa: "அன்பின் மடியில் ஆசையாய் வளர்ந்து வரும் எங்கள் செல்ல மகள்.",
+    milestoneEn: "Month 4",
+    milestoneTa: "4-வது மாதம்",
+    icon: "🎀",
+  },
 ]
 
-/* ─── Language Content ─── */
+/* ─── Page Content (English & Tamil) ─── */
 const content = {
   en: {
     eyebrow: "Come celebrate",
@@ -35,16 +114,35 @@ const content = {
     signaturePrefix: "With boundless love,",
     signatureFamily: "Dwaraknaath, Srivarsini and Shrishtiika",
     scrollExplore: "scroll to explore",
-    momentsTag: "little moments",
+
+    // Baby Showcase
+    spotlightTag: "magical moments",
+    spotlightTitle: "Shrishtiika's Storybook",
+    spotlightSubtitle: "Tap a memory below to relive each precious milestone.",
+    autoPlay: "Auto Play",
+    pause: "Pause",
+
+    // Draggable Memories
+    momentsTag: "interactive memories",
     momentsHeading: "A year",
     momentsItalic: "in bloom.",
-    momentsSubtitle: "Drag memories of Shrishtiika's first 365 magical days.",
-    captions: ["the first smile", "best cuddles", "cake everywhere", "hello, world"],
+    momentsSubtitle: "Drag, toss and shuffle memories of Shrishtiika's first 365 magical days.",
+    shuffleBtn: "Shuffle Memories ✨",
+
+    // Countdown & Celebration
+    countdownLabel: "Birthday In",
+    daysUnit: "d",
+    hoursUnit: "h",
+    minsUnit: "m",
+    secsUnit: "s",
+    celebratingNow: "Celebrating Today! 🎂",
+    popCelebration: "Pop ✨",
+
+    // Footer - exactly as requested: "built with love by daddy cool and cool mama's"
     footerLove: "built with love by",
-    footerDad: "daddy cool (Dwaraknaath)",
+    footerDad: "daddy cool",
     footerAnd: "and",
-    footerMom: "cool mama (Srivarsini)",
-    sendLove: "Send Love",
+    footerMom: "cool mama's",
   },
   ta: {
     eyebrow: "கொண்டாட வாருங்கள்",
@@ -63,16 +161,35 @@ const content = {
     signaturePrefix: "அன்புடன்,",
     signatureFamily: "த்வர்கநாத், ஸ்ரீவர்சினி மற்றும் ஸ்ரிஷ்டிகா",
     scrollExplore: "கீழே பார்க்கவும்",
+
+    // Baby Showcase
+    spotlightTag: "அழகிய தருணங்கள்",
+    spotlightTitle: "ஸ்ரிஷ்டிகாவின் கதையேடு",
+    spotlightSubtitle: "ஒவ்வொரு மாத நினைவையும் தொட்டுப் பார்க்கவும்.",
+    autoPlay: "தானியங்கி இயக்கம்",
+    pause: "நிறுத்து",
+
+    // Draggable Memories
     momentsTag: "இனிய நினைவுகள்",
     momentsHeading: "ஒரு மலர்ந்த",
     momentsItalic: "ஆண்டு.",
-    momentsSubtitle: "ஸ்ரிஷ்டிகாவின் 365 நாள் அழகிய நினைவுகள்.",
-    captions: ["முதல் புன்னகை", "அன்புக் கட்டிப்பிடி", "கேக் கொண்டாட்டம்", "வணக்கம் உலகம்"],
+    momentsSubtitle: "ஸ்ரிஷ்டிகாவின் 365 நாள் அழகிய நினைவுகளை நகர்த்தி விளையாடுங்கள்.",
+    shuffleBtn: "நினைவுகளை மாற்றுக ✨",
+
+    // Countdown & Celebration
+    countdownLabel: "பிறந்தநாளுக்கு இன்னும்",
+    daysUnit: "நாள்",
+    hoursUnit: "மணி",
+    minsUnit: "நிமி",
+    secsUnit: "நொடி",
+    celebratingNow: "இன்று பிறந்தநாள் விழா! 🎂",
+    popCelebration: "கொண்டாட்டம் ✨",
+
+    // Footer
     footerLove: "அன்புடன் உருவாக்கியவர்கள்",
-    footerDad: "டாடி கூல் (த்வர்கநாத்)",
+    footerDad: "டாடி கூல்",
     footerAnd: "மற்றும்",
-    footerMom: "கூல் மாமா (ஸ்ரீவர்சினி)",
-    sendLove: "அன்பை அனுப்புங்கள்",
+    footerMom: "கூல் மாமாஸ்",
   },
 }
 
@@ -120,18 +237,18 @@ function BirthdayCakeSVG({ className }: { className?: string }) {
   )
 }
 
-/* ─── Floating Ambient Particles ─── */
+/* ─── Floating Particles ─── */
 function FloatingParticles() {
   return (
     <div className="floating-particles" aria-hidden="true">
-      {Array.from({ length: 24 }).map((_, i) => (
+      {Array.from({ length: 22 }).map((_, i) => (
         <span
           key={i}
           className="particle"
           style={{
             "--delay": `${(i * 0.4) % 7}s`,
             "--duration": `${7 + (i % 5) * 1.5}s`,
-            "--x-start": `${(i * 4.2) % 100}%`,
+            "--x-start": `${(i * 4.6) % 100}%`,
             "--size": `${8 + (i % 4) * 4}px`,
             "--opacity": `${0.18 + (i % 3) * 0.12}`,
           } as React.CSSProperties}
@@ -143,7 +260,7 @@ function FloatingParticles() {
   )
 }
 
-/* ─── Horizontal Scroll Loader with Cinematic Video Entrance ─── */
+/* ─── Horizontal Scroll Loader ─── */
 const milestones = [
   { step: "01", title: "A Miracle Arrived", sub: "September 2025" },
   { step: "02", title: "365 Days of Joy", sub: "Love & giggles" },
@@ -201,7 +318,6 @@ function HorizontalScrollLoader({ onComplete }: { onComplete: () => void }) {
       onClick={finish}
     >
       <div className="cinema-loader-body">
-        {/* Cake with glowing ring */}
         <motion.div
           className="loader-cake-container"
           initial={{ scale: 0.8, opacity: 0 }}
@@ -212,7 +328,6 @@ function HorizontalScrollLoader({ onComplete }: { onComplete: () => void }) {
           <BirthdayCakeSVG className="loader-cake-svg" />
         </motion.div>
 
-        {/* Milestone Carousel horizontally gliding */}
         <div className="loader-milestone-track">
           <AnimatePresence mode="wait">
             <motion.div
@@ -230,7 +345,6 @@ function HorizontalScrollLoader({ onComplete }: { onComplete: () => void }) {
           </AnimatePresence>
         </div>
 
-        {/* Horizontal Progress Bar */}
         <div className="loader-progress-wrapper">
           <div className="loader-progress-track">
             <motion.div
@@ -263,33 +377,107 @@ function HorizontalScrollLoader({ onComplete }: { onComplete: () => void }) {
   )
 }
 
-/* ─── Main Page Component ─── */
+/* ─── Birthday Countdown Calculator ─── */
+interface TimeRemaining {
+  days: number
+  hours: number
+  minutes: number
+  seconds: number
+  isCelebrationTime: boolean
+}
+
+function calculateDurationLeft(): TimeRemaining {
+  // Saturday, 26th September 2026, 6:00 PM IST (UTC+05:30)
+  const target = new Date("2026-09-26T18:00:00+05:30").getTime()
+  const now = Date.now()
+  const diff = target - now
+
+  if (diff <= 0) {
+    return { days: 0, hours: 0, minutes: 0, seconds: 0, isCelebrationTime: true }
+  }
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24)
+  const minutes = Math.floor((diff / (1000 * 60)) % 60)
+  const seconds = Math.floor((diff / 1000) % 60)
+
+  return { days, hours, minutes, seconds, isCelebrationTime: false }
+}
+
+/* ─── Main Page ─── */
 export default function Page() {
   const [hasEntered, setHasEntered] = React.useState(false)
   const [lang, setLang] = React.useState<"en" | "ta">("en")
-  const [loveCount, setLoveCount] = React.useState(128)
-  const [isLovePulsing, setIsLovePulsing] = React.useState(false)
+  const [popTriggerKey, setPopTriggerKey] = React.useState(0)
+  const [timeLeft, setTimeLeft] = React.useState<TimeRemaining>(calculateDurationLeft)
+  const [isCountdownPulsing, setIsCountdownPulsing] = React.useState(false)
+
+  // Interactive Story Spotlight Index with AUTOPLAY ON BY DEFAULT
+  const [activeStoryIdx, setActiveStoryIdx] = React.useState(0)
+  const [isAutoPlaying, setIsAutoPlaying] = React.useState(true)
+
+  // Scrapbook Shuffle Seed
+  const [shuffleKey, setShuffleKey] = React.useState(0)
 
   const t = content[lang]
+  const activeStory = portraits[activeStoryIdx]
 
   const { scrollYProgress } = useScroll()
   const heroParallax = useTransform(scrollYProgress, [0, 0.35], [0, -70])
   const cakeParallax = useTransform(scrollYProgress, [0, 0.35], [0, 50])
   const bgParallax = useTransform(scrollYProgress, [0, 1], [0, 180])
 
-  const handleSendLove = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    setLoveCount((c) => c + 1)
-    setIsLovePulsing(true)
-    setTimeout(() => setIsLovePulsing(false), 300)
+  // Live countdown timer ticking every second
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(calculateDurationLeft())
+    }, 1000)
+    return () => clearInterval(timer)
+  }, [])
 
-    // Trigger floating hearts event
+  // Auto-play spotlight reel (default ON)
+  React.useEffect(() => {
+    if (!isAutoPlaying) return
+    const interval = setInterval(() => {
+      setActiveStoryIdx((prev) => (prev + 1) % portraits.length)
+    }, 3400)
+    return () => clearInterval(interval)
+  }, [isAutoPlaying])
+
+  const triggerHeartBurst = React.useCallback((clientX?: number, clientY?: number) => {
     const event = new PointerEvent("pointerdown", {
-      clientX: e.clientX || window.innerWidth / 2,
-      clientY: e.clientY || window.innerHeight - 80,
+      clientX: clientX || window.innerWidth / 2,
+      clientY: clientY || window.innerHeight / 2,
       bubbles: true,
     })
     window.dispatchEvent(event)
+  }, [])
+
+  // Handle Entrance from Loader -> Fire initial celebratory birthday pop!
+  const handleEntranceComplete = () => {
+    setHasEntered(true)
+    setPopTriggerKey(Date.now())
+  }
+
+  // Handle Birthday Pop & Hearts celebration
+  const handleCountdownClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setIsCountdownPulsing(true)
+    setTimeout(() => setIsCountdownPulsing(false), 300)
+    setPopTriggerKey(Date.now())
+    triggerHeartBurst(e.clientX, e.clientY)
+  }
+
+  // Shuffle polaroids playfully
+  const handleShuffle = () => {
+    setShuffleKey((k) => k + 1)
+    triggerHeartBurst()
+  }
+
+  // Double-tap or double-click a memory to like it
+  const handleCardLike = (e: React.MouseEvent) => {
+    setPopTriggerKey(Date.now())
+    triggerHeartBurst(e.clientX, e.clientY)
   }
 
   return (
@@ -297,273 +485,501 @@ export default function Page() {
       <HeartCursor />
       <ClickHearts />
 
+      {/* Birthday Confetti Pop Canvas Effect */}
+      <BirthdayPop triggerKey={popTriggerKey} />
+
       {/* Cinematic Horizontal Loader Overlay */}
       <AnimatePresence>
         {!hasEntered && (
           <HorizontalScrollLoader
             key="cinema-loader"
-            onComplete={() => setHasEntered(true)}
+            onComplete={handleEntranceComplete}
           />
         )}
       </AnimatePresence>
 
-      <div
-        className={`invitation-page ${lang === "ta" ? "font-tamil-active" : ""}`}
-      >
-          {/* Ambient Background with User's Uploaded Birthday Photo */}
+      <div className={`invitation-page ${lang === "ta" ? "font-tamil-active" : ""}`}>
+        {/* Ambient Background with User's Uploaded Birthday Photo */}
+        <motion.div
+          className="ambient-bg-layer"
+          style={{ y: bgParallax }}
+          aria-hidden="true"
+        >
+          <img
+            src="/birthday-bg.jpg"
+            alt="Birthday backdrop"
+            draggable={false}
+          />
+          <div className="ambient-gradient-overlay" />
+        </motion.div>
+
+        {/* Floating Romantic Particles */}
+        <FloatingParticles />
+
+        {/* Floating Birthday Countdown Pill */}
+        <motion.button
+          className={`birthday-countdown-pill ${isCountdownPulsing ? "is-pulsing" : ""}`}
+          onClick={handleCountdownClick}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.6, type: "spring", stiffness: 400 }}
+          aria-label="Birthday countdown"
+          title="Tap to celebrate with confetti! 🎉"
+        >
+          <div className="countdown-icon-wrap">
+            <span>🎂</span>
+          </div>
+
+          <div className="countdown-content">
+            <span className="countdown-tagline">{t.countdownLabel}</span>
+            <div className="countdown-timer-digits">
+              {timeLeft.isCelebrationTime ? (
+                <span>{t.celebratingNow}</span>
+              ) : (
+                <>
+                  <span className="countdown-unit">
+                    <span className="val">{timeLeft.days}</span>
+                    <span className="lbl">{t.daysUnit}</span>
+                  </span>
+                  <span className="countdown-sep">:</span>
+                  <span className="countdown-unit">
+                    <span className="val">{String(timeLeft.hours).padStart(2, "0")}</span>
+                    <span className="lbl">{t.hoursUnit}</span>
+                  </span>
+                  <span className="countdown-sep">:</span>
+                  <span className="countdown-unit">
+                    <span className="val">{String(timeLeft.minutes).padStart(2, "0")}</span>
+                    <span className="lbl">{t.minsUnit}</span>
+                  </span>
+                  <span className="countdown-sep">:</span>
+                  <span className="countdown-unit">
+                    <span className="val">{String(timeLeft.seconds).padStart(2, "0")}</span>
+                    <span className="lbl">{t.secsUnit}</span>
+                  </span>
+                </>
+              )}
+            </div>
+          </div>
+
+          <span className="countdown-pop-badge">
+            <Sparkles size={11} />
+            <span>{t.popCelebration}</span>
+          </span>
+        </motion.button>
+
+        {/* ════════════════════════════════════════════ */}
+        {/* ─── INVITATION POSTER CARD ─── */}
+        {/* ════════════════════════════════════════════ */}
+        <main className="invite-stage">
+          <article className="invite-card">
+            <span className="card-ornament-frame" aria-hidden="true" />
+
+            <div className="card-content">
+              {/* Top Nav: Eyebrow + Language Switcher */}
+              <div className="card-top-nav">
+                <span className="invite-eyebrow">
+                  <Sparkles size={11} className="inline mr-1" />
+                  {t.eyebrow}
+                </span>
+
+                <div className="lang-switcher" role="radiogroup" aria-label="Select Language">
+                  <button
+                    type="button"
+                    className={`lang-btn ${lang === "en" ? "is-active" : ""}`}
+                    onClick={() => setLang("en")}
+                    aria-checked={lang === "en"}
+                    role="radio"
+                  >
+                    English
+                  </button>
+                  <button
+                    type="button"
+                    className={`lang-btn ${lang === "ta" ? "is-active" : ""}`}
+                    onClick={() => setLang("ta")}
+                    aria-checked={lang === "ta"}
+                    role="radio"
+                  >
+                    தமிழ்
+                  </button>
+                </div>
+              </div>
+
+              {/* Hero Centerpiece: Birthday Cake */}
+              <motion.div
+                className="cake-stage"
+                style={{ y: cakeParallax }}
+                initial={{ opacity: 0, scale: 0.85 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+              >
+                <div className="cake-halo-glow" />
+                <BirthdayCakeSVG className="poster-cake-svg" />
+              </motion.div>
+
+              {/* Celebration Header */}
+              <motion.header
+                className="poster-header"
+                style={{ y: heroParallax }}
+                initial={{ opacity: 0, y: 25 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.35 }}
+              >
+                <h1 className="poster-title">{t.firstName}</h1>
+                <p className="poster-subtitle">{t.lastName}</p>
+                <div className="badge-wrapper">
+                  <span className="poster-badge">{t.occasion}</span>
+                </div>
+                <p className="poster-quote">{t.quote}</p>
+              </motion.header>
+
+              {/* Event Details Grid (Glassmorphic) */}
+              <motion.section
+                className="details-grid-card"
+                initial={{ opacity: 0, y: 35 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+              >
+                {/* Date & Time */}
+                <div className="detail-box">
+                  <span className="box-tag">{t.dateTimeLabel}</span>
+                  <p className="box-day">{t.day}</p>
+                  <strong className="box-date">{t.date}</strong>
+                  <p className="box-time">{t.time}</p>
+                </div>
+
+                {/* Venue */}
+                <div className="detail-box">
+                  <span className="box-tag">{t.venueLabel}</span>
+                  <strong className="box-venue">{t.venueName}</strong>
+                  <p className="box-address">{t.venueAddress}</p>
+                  <a
+                    href="https://www.google.com/maps/dir/?api=1&destination=Zaitoon+Restaurant%2C+362+Velachery+Main+Road%2C+Velachery%2C+Chennai+600042"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="maps-action-btn"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <MapPin size={12} />
+                    <span>{t.openInMaps}</span>
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </motion.section>
+
+              {/* Signature from Parents */}
+              <motion.div
+                className="parents-signature"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.7, delay: 0.7 }}
+              >
+                <p className="sig-prefix">{t.signaturePrefix}</p>
+                <p className="sig-family">{t.signatureFamily}</p>
+              </motion.div>
+
+              <div className="gold-divider-line" />
+
+              {/* Scroll Cue */}
+              <div className="scroll-cue-container">
+                <span className="cue-label">{t.scrollExplore}</span>
+                <div className="cue-arrow-bounce">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                    <path d="M12 5v14M5 12l7 7 7-7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </article>
+        </main>
+
+        {/* ════════════════════════════════════════════ */}
+        {/* ─── SECTION 1: INTERACTIVE STORYBOOK SPOTLIGHT ─── */}
+        {/* ════════════════════════════════════════════ */}
+        <section className="storybook-section">
+          {/* Fairy Lights Garland Header */}
+          <div className="fairy-lights-garland" aria-hidden="true">
+            {Array.from({ length: 14 }).map((_, i) => (
+              <span key={i} className={`fairy-light-bulb bulb-${(i % 3) + 1}`} />
+            ))}
+          </div>
+
+          <div className="storybook-header">
+            <span className="storybook-eyebrow">
+              <Sparkles size={12} className="inline mr-1 text-gold" />
+              {t.spotlightTag}
+            </span>
+            <h2 className="storybook-title">{t.spotlightTitle}</h2>
+            <p className="storybook-subtitle">{t.spotlightSubtitle}</p>
+          </div>
+
+          {/* Luxury Gilded Spotlight Stage */}
+          <div className="spotlight-stage">
+            <button
+              type="button"
+              className="spotlight-nav-btn prev"
+              onClick={() => {
+                setActiveStoryIdx((prev) => (prev - 1 + portraits.length) % portraits.length)
+                triggerHeartBurst()
+              }}
+              aria-label="Previous Memory"
+            >
+              <ChevronLeft size={20} />
+            </button>
+
+            <div className="spotlight-frame-wrapper">
+              <div className="spotlight-golden-frame">
+                <span className="frame-corner corner-tl" />
+                <span className="frame-corner corner-tr" />
+                <span className="frame-corner corner-bl" />
+                <span className="frame-corner corner-br" />
+
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeStory.id}
+                    className="spotlight-photo-container"
+                    initial={{ opacity: 0, scale: 0.94, y: 12 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 1.04, y: -12 }}
+                    transition={{ duration: 0.45, ease: "easeOut" }}
+                  >
+                    <img
+                      src={activeStory.src}
+                      alt={activeStory.alt}
+                      className="spotlight-img"
+                      draggable={false}
+                    />
+
+                    {/* Overlay badge */}
+                    <div className="spotlight-badge-row">
+                      <span className="milestone-pill">
+                        {lang === "ta" ? activeStory.milestoneTa : activeStory.milestoneEn}
+                      </span>
+                      <span className="icon-pill">{activeStory.icon}</span>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+
+              {/* Story Description Card */}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeStory.id}
+                  className="spotlight-caption-card"
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -14 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <h3 className="story-caption-title">
+                    {lang === "ta" ? activeStory.tagTa : activeStory.tagEn}
+                    <span className="story-caption-sub">
+                      — {lang === "ta" ? activeStory.captionTa : activeStory.captionEn}
+                    </span>
+                  </h3>
+                  <p className="story-caption-desc">
+                    {lang === "ta" ? activeStory.descTa : activeStory.descEn}
+                  </p>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            <button
+              type="button"
+              className="spotlight-nav-btn next"
+              onClick={() => {
+                setActiveStoryIdx((prev) => (prev + 1) % portraits.length)
+                triggerHeartBurst()
+              }}
+              aria-label="Next Memory"
+            >
+              <ChevronRight size={20} />
+            </button>
+          </div>
+
+          {/* Interactive Story Chips / Avatars */}
+          <div className="story-chips-row">
+            <button
+              type="button"
+              className={`autoplay-toggle-btn ${isAutoPlaying ? "is-active" : ""}`}
+              onClick={() => setIsAutoPlaying(!isAutoPlaying)}
+              title={isAutoPlaying ? t.pause : t.autoPlay}
+            >
+              {isAutoPlaying ? <Pause size={13} /> : <Play size={13} />}
+              <span>{isAutoPlaying ? t.pause : t.autoPlay}</span>
+            </button>
+
+            <div className="chips-scroller">
+              {portraits.map((item, idx) => {
+                const isActive = idx === activeStoryIdx
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    className={`story-chip-pill ${isActive ? "is-active" : ""}`}
+                    onClick={() => {
+                      setActiveStoryIdx(idx)
+                      triggerHeartBurst()
+                    }}
+                  >
+                    <div className="chip-avatar">
+                      <img src={item.src} alt={item.alt} draggable={false} />
+                    </div>
+                    <span className="chip-label">
+                      {lang === "ta" ? item.captionTa : item.captionEn}
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* ════════════════════════════════════════════ */}
+        {/* ─── SECTION 2: INTERACTIVE DRAGGABLE POLAROIDS ─── */}
+        {/* ════════════════════════════════════════════ */}
+        <section className="memories-showcase-section">
           <motion.div
-            className="ambient-bg-layer"
-            style={{ y: bgParallax }}
-            aria-hidden="true"
+            className="memories-header"
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.7 }}
           >
-            <img src="/birthday-bg.jpg" alt="Birthday backdrop" />
-            <div className="ambient-gradient-overlay" />
+            <span className="memories-tag">{t.momentsTag}</span>
+            <h2 className="memories-title">
+              {t.momentsHeading} <i>{t.momentsItalic}</i>
+            </h2>
+            <p className="memories-sub">{t.momentsSubtitle}</p>
+
+            <button
+              type="button"
+              onClick={handleShuffle}
+              className="shuffle-action-btn"
+            >
+              <Shuffle size={13} />
+              <span>{t.shuffleBtn}</span>
+            </button>
           </motion.div>
 
-          {/* Floating Romantic Particles */}
-          <FloatingParticles />
-
-          {/* Floating Love Button */}
-          <motion.button
-            className={`send-love-pill ${isLovePulsing ? "is-pulsing" : ""}`}
-            onClick={handleSendLove}
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 1, type: "spring", stiffness: 400 }}
-            aria-label="Send love"
-          >
-            <Heart className="send-love-icon" size={16} fill="#e8607a" />
-            <span>{t.sendLove}</span>
-            <span className="love-badge">{loveCount}</span>
-          </motion.button>
-
-          {/* ════════════════════════════════════════════ */}
-          {/* ─── INVITATION POSTER CARD ─── */}
-          {/* ════════════════════════════════════════════ */}
-          <main className="invite-stage">
-            <article className="invite-card">
-              {/* Outer Golden Border Frame */}
-              <span className="card-ornament-frame" aria-hidden="true" />
-
-              <div className="card-content">
-                {/* Top Nav: Eyebrow + Language Switcher */}
-                <div className="card-top-nav">
-                  <span className="invite-eyebrow">
-                    <Sparkles size={11} className="inline mr-1" />
-                    {t.eyebrow}
-                  </span>
-
-                  <div className="lang-switcher" role="radiogroup" aria-label="Select Language">
-                    <button
-                      type="button"
-                      className={`lang-btn ${lang === "en" ? "is-active" : ""}`}
-                      onClick={() => setLang("en")}
-                      aria-checked={lang === "en"}
-                      role="radio"
-                    >
-                      English
-                    </button>
-                    <button
-                      type="button"
-                      className={`lang-btn ${lang === "ta" ? "is-active" : ""}`}
-                      onClick={() => setLang("ta")}
-                      aria-checked={lang === "ta"}
-                      role="radio"
-                    >
-                      தமிழ்
-                    </button>
-                  </div>
-                </div>
-
-                {/* Hero Centerpiece: Birthday Cake with Parallax */}
-                <motion.div
-                  className="cake-stage"
-                  style={{ y: cakeParallax }}
-                  initial={{ opacity: 0, scale: 0.85 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.9, delay: 0.2 }}
-                >
-                  <div className="cake-halo-glow" />
-                  <BirthdayCakeSVG className="poster-cake-svg" />
-                </motion.div>
-
-                {/* Celebration Header */}
-                <motion.header
-                  className="poster-header"
-                  style={{ y: heroParallax }}
-                  initial={{ opacity: 0, y: 25 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.35 }}
-                >
-                  <h1 className="poster-title">{t.firstName}</h1>
-                  <p className="poster-subtitle">{t.lastName}</p>
-                  <div className="badge-wrapper">
-                    <span className="poster-badge">{t.occasion}</span>
-                  </div>
-                  <p className="poster-quote">{t.quote}</p>
-                </motion.header>
-
-                {/* Event Details Grid (Glassmorphic) */}
-                <motion.section
-                  className="details-grid-card"
-                  initial={{ opacity: 0, y: 35 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.5 }}
-                >
-                  {/* Date & Time */}
-                  <div className="detail-box">
-                    <span className="box-tag">{t.dateTimeLabel}</span>
-                    <p className="box-day">{t.day}</p>
-                    <strong className="box-date">{t.date}</strong>
-                    <p className="box-time">{t.time}</p>
-                  </div>
-
-                  {/* Venue */}
-                  <div className="detail-box">
-                    <span className="box-tag">{t.venueLabel}</span>
-                    <strong className="box-venue">{t.venueName}</strong>
-                    <p className="box-address">{t.venueAddress}</p>
-                    <a
-                      href="https://www.google.com/maps/dir/?api=1&destination=Zaitoon+Restaurant%2C+362+Velachery+Main+Road%2C+Velachery%2C+Chennai+600042"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="maps-action-btn"
-                    >
-                      <MapPin size={12} />
-                      <span>{t.openInMaps}</span>
-                      <span aria-hidden="true">↗</span>
-                    </a>
-                  </div>
-                </motion.section>
-
-                {/* Signature from Parents */}
-                <motion.div
-                  className="parents-signature"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.7, delay: 0.7 }}
-                >
-                  <p className="sig-prefix">{t.signaturePrefix}</p>
-                  <p className="sig-family">{t.signatureFamily}</p>
-                </motion.div>
-
-                {/* Golden Line Divider */}
-                <div className="gold-divider-line" />
-
-                {/* Scroll Cue */}
-                <div className="scroll-cue-container">
-                  <span className="cue-label">{t.scrollExplore}</span>
-                  <div className="cue-arrow-bounce">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                      <path d="M12 5v14M5 12l7 7 7-7" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </article>
-          </main>
-
-          {/* ════════════════════════════════════════════ */}
-          {/* ─── BABY PORTRAIT ORBIT SHOWCASE ─── */}
-          {/* ════════════════════════════════════════════ */}
-          <section className="orbit-showcase-section">
-            <motion.div
-              className="orbit-container"
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.8 }}
-            >
-              <div className="orbit-glow-ring" />
-              <div className="orbit-track-ring" />
-
-              {/* Main Baby Portrait */}
-              <div className="orbit-center-portrait">
+          <DraggableCardContainer key={shuffleKey} className="polaroid-stack-container">
+            {/* 1. Teddy Bear -> BEST CUDDLES */}
+            <DraggableCardBody className="polaroid-card polaroid-pos-1">
+              <div className="polaroid-inner" onDoubleClick={handleCardLike}>
+                <div className="washi-tape tape-rose" />
+                <div className="polaroid-heart-pin">♥</div>
                 <img
-                  src={portraits[0].src}
-                  alt={portraits[0].alt}
-                  className="center-baby-img"
+                  src={portraits[1].src}
+                  alt={portraits[1].alt}
+                  className="polaroid-photo"
+                  draggable={false}
                 />
+                <span className="polaroid-milestone-stamp">
+                  {lang === "ta" ? portraits[1].milestoneTa : portraits[1].milestoneEn}
+                </span>
+                <span className="polaroid-caption">
+                  {lang === "ta" ? portraits[1].captionTa : portraits[1].captionEn}
+                </span>
               </div>
+            </DraggableCardBody>
 
-              {/* Orbiting Satellite Photos */}
-              <div className="orbit-satellites">
-                {portraits.slice(1).map((item, idx) => (
-                  <div
-                    key={item.src}
-                    className="satellite-arm"
-                    style={{
-                      "--rot": `${idx * 72}deg`,
-                      "--delay": `${idx * 0.15}s`,
-                    } as React.CSSProperties}
-                  >
-                    <motion.div
-                      className="satellite-photo-wrap"
-                      whileHover={{ scale: 1.18 }}
-                      transition={{ type: "spring", stiffness: 400 }}
-                    >
-                      <img
-                        src={item.src}
-                        alt={item.alt}
-                        className="satellite-img"
-                      />
-                    </motion.div>
-                  </div>
-                ))}
+            {/* 2. Cake Smash -> CAKE EVERYWHERE */}
+            <DraggableCardBody className="polaroid-card polaroid-pos-2">
+              <div className="polaroid-inner" onDoubleClick={handleCardLike}>
+                <div className="washi-tape tape-gold" />
+                <div className="polaroid-heart-pin">🎂</div>
+                <img
+                  src={portraits[2].src}
+                  alt={portraits[2].alt}
+                  className="polaroid-photo"
+                  draggable={false}
+                />
+                <span className="polaroid-milestone-stamp">
+                  {lang === "ta" ? portraits[2].milestoneTa : portraits[2].milestoneEn}
+                </span>
+                <span className="polaroid-caption">
+                  {lang === "ta" ? portraits[2].captionTa : portraits[2].captionEn}
+                </span>
               </div>
-            </motion.div>
-          </section>
+            </DraggableCardBody>
 
-          {/* ════════════════════════════════════════════ */}
-          {/* ─── INTERACTIVE MEMORIES (Draggable Polaroids) ─── */}
-          {/* ════════════════════════════════════════════ */}
-          <section className="memories-showcase-section">
-            <motion.div
-              className="memories-header"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.7 }}
-            >
-              <span className="memories-tag">{t.momentsTag}</span>
-              <h2 className="memories-title">
-                {t.momentsHeading} <i>{t.momentsItalic}</i>
-              </h2>
-              <p className="memories-sub">{t.momentsSubtitle}</p>
-            </motion.div>
+            {/* 3. Waving Dress -> HELLO, WORLD */}
+            <DraggableCardBody className="polaroid-card polaroid-pos-3">
+              <div className="polaroid-inner" onDoubleClick={handleCardLike}>
+                <div className="washi-tape tape-cream" />
+                <div className="polaroid-heart-pin">✨</div>
+                <img
+                  src={portraits[3].src}
+                  alt={portraits[3].alt}
+                  className="polaroid-photo"
+                  draggable={false}
+                />
+                <span className="polaroid-milestone-stamp">
+                  {lang === "ta" ? portraits[3].milestoneTa : portraits[3].milestoneEn}
+                </span>
+                <span className="polaroid-caption">
+                  {lang === "ta" ? portraits[3].captionTa : portraits[3].captionEn}
+                </span>
+              </div>
+            </DraggableCardBody>
 
-            <DraggableCardContainer className="polaroid-stack-container">
-              {portraits.slice(1, 5).map((img, i) => (
-                <DraggableCardBody
-                  key={img.src}
-                  className={`polaroid-card polaroid-pos-${i + 1}`}
-                >
-                  <div className="polaroid-inner">
-                    <div className="polaroid-pin" />
-                    <img src={img.src} alt={img.alt} className="polaroid-photo" />
-                    <span className="polaroid-caption">{t.captions[i]}</span>
-                  </div>
-                </DraggableCardBody>
-              ))}
-            </DraggableCardContainer>
-          </section>
+            {/* 4. Giggling Covering Mouth -> THE SWEETEST SMILE */}
+            <DraggableCardBody className="polaroid-card polaroid-pos-4">
+              <div className="polaroid-inner" onDoubleClick={handleCardLike}>
+                <div className="washi-tape tape-pink" />
+                <div className="polaroid-heart-pin">💕</div>
+                <img
+                  src={portraits[4].src}
+                  alt={portraits[4].alt}
+                  className="polaroid-photo"
+                  draggable={false}
+                />
+                <span className="polaroid-milestone-stamp">
+                  {lang === "ta" ? portraits[4].milestoneTa : portraits[4].milestoneEn}
+                </span>
+                <span className="polaroid-caption">
+                  {lang === "ta" ? portraits[4].captionTa : portraits[4].captionEn}
+                </span>
+              </div>
+            </DraggableCardBody>
 
-          {/* ════════════════════════════════════════════ */}
-          {/* ─── FOOTER WITH LOVE FROM PARENTS ─── */}
-          {/* ════════════════════════════════════════════ */}
-          <footer className="invitation-footer">
-            <div className="footer-golden-filigree" />
-            <p className="footer-signature-text">
-              {t.footerLove}{" "}
-              <strong className="parent-highlight daddy">{t.footerDad}</strong>{" "}
-              {t.footerAnd}{" "}
-              <strong className="parent-highlight mama">{t.footerMom}</strong>{" "}
-              💕
-            </p>
-            <p className="footer-copyright">
-              Celebrating Shrishtiika • Chennai 2026
-            </p>
-          </footer>
+            {/* 5. Pink Frills -> GROWING WITH LOVE */}
+            <DraggableCardBody className="polaroid-card polaroid-pos-5">
+              <div className="polaroid-inner" onDoubleClick={handleCardLike}>
+                <div className="washi-tape tape-rose" />
+                <div className="polaroid-heart-pin">🌸</div>
+                <img
+                  src={portraits[5].src}
+                  alt={portraits[5].alt}
+                  className="polaroid-photo"
+                  draggable={false}
+                />
+                <span className="polaroid-milestone-stamp">
+                  {lang === "ta" ? portraits[5].milestoneTa : portraits[5].milestoneEn}
+                </span>
+                <span className="polaroid-caption">
+                  {lang === "ta" ? portraits[5].captionTa : portraits[5].captionEn}
+                </span>
+              </div>
+            </DraggableCardBody>
+          </DraggableCardContainer>
+        </section>
+
+        {/* ════════════════════════════════════════════ */}
+        {/* ─── FOOTER WITH LOVE FROM PARENTS ─── */}
+        {/* ════════════════════════════════════════════ */}
+        <footer className="invitation-footer">
+          <div className="footer-golden-filigree" />
+          <p className="footer-signature-text">
+            {t.footerLove}{" "}
+            <strong className="parent-highlight daddy">{t.footerDad}</strong>{" "}
+            {t.footerAnd}{" "}
+            <strong className="parent-highlight mama">{t.footerMom}</strong>{" "}
+            💕
+          </p>
+          <p className="footer-copyright">
+            Dwaraknaath &amp; Srivarsini • Celebrating Shrishtiika • Chennai 2026
+          </p>
+        </footer>
       </div>
     </CursorProvider>
   )
