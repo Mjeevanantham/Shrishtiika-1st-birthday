@@ -653,49 +653,42 @@ export default function Page() {
             <span className="card-ornament-frame" aria-hidden="true" />
 
             <div className="card-content">
-              {/* Top Nav: Eyebrow + Music Control + Language Switcher */}
+              {/* Top Nav: Music Control (Left) + Language Switcher (Right) */}
               <div className="card-top-nav">
-                <span className="invite-eyebrow">
-                  <Sparkles size={11} className="inline mr-1" />
-                  {t.eyebrow}
-                </span>
+                <button
+                  type="button"
+                  className={`ambient-music-btn ${isMusicPlaying ? "is-playing" : "is-muted"}`}
+                  onClick={toggleMusic}
+                  title={isMusicPlaying ? t.musicLabel : t.musicMuted}
+                  aria-label="Toggle background birthday song"
+                >
+                  <div className="equalizer-bars" aria-hidden="true">
+                    <span className="equalizer-bar" />
+                    <span className="equalizer-bar" />
+                    <span className="equalizer-bar" />
+                  </div>
+                  <span>{isMusicPlaying ? t.musicLabel : t.musicMuted}</span>
+                </button>
 
-                <div className="card-nav-actions">
+                <div className="lang-switcher" role="radiogroup" aria-label="Select Language">
                   <button
                     type="button"
-                    className={`ambient-music-btn ${isMusicPlaying ? "is-playing" : "is-muted"}`}
-                    onClick={toggleMusic}
-                    title={isMusicPlaying ? t.musicLabel : t.musicMuted}
-                    aria-label="Toggle background birthday song"
+                    className={`lang-btn ${lang === "en" ? "is-active" : ""}`}
+                    onClick={() => setLang("en")}
+                    aria-checked={lang === "en"}
+                    role="radio"
                   >
-                    <div className="equalizer-bars" aria-hidden="true">
-                      <span className="equalizer-bar" />
-                      <span className="equalizer-bar" />
-                      <span className="equalizer-bar" />
-                    </div>
-                    <span>{isMusicPlaying ? t.musicLabel : t.musicMuted}</span>
+                    English
                   </button>
-
-                  <div className="lang-switcher" role="radiogroup" aria-label="Select Language">
-                    <button
-                      type="button"
-                      className={`lang-btn ${lang === "en" ? "is-active" : ""}`}
-                      onClick={() => setLang("en")}
-                      aria-checked={lang === "en"}
-                      role="radio"
-                    >
-                      English
-                    </button>
-                    <button
-                      type="button"
-                      className={`lang-btn ${lang === "ta" ? "is-active" : ""}`}
-                      onClick={() => setLang("ta")}
-                      aria-checked={lang === "ta"}
-                      role="radio"
-                    >
-                      தமிழ்
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    className={`lang-btn ${lang === "ta" ? "is-active" : ""}`}
+                    onClick={() => setLang("ta")}
+                    aria-checked={lang === "ta"}
+                    role="radio"
+                  >
+                    தமிழ்
+                  </button>
                 </div>
               </div>
 
