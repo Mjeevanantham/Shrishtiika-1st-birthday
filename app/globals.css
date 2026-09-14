@@ -1579,3 +1579,305 @@ a, button, input {
     scroll-behavior: auto !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════
+   LOCKED ROYAL ENVELOPE INVITATION INTRO
+   ═══════════════════════════════════════════════════ */
+.grand-entrance-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 99985;
+  background: radial-gradient(circle at center, #5c2025 0%, #3d1417 60%, #20080a 100%);
+  overflow: hidden;
+}
+
+.locked-envelope-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 99980;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, #5c2025 0%, #3d1417 60%, #20080a 100%);
+  padding: 20px;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.envelope-ambient-glow {
+  position: absolute;
+  width: min(650px, 92vw);
+  height: min(650px, 92vw);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 210, 122, 0.22) 0%, rgba(232, 96, 122, 0.1) 50%, transparent 75%);
+  pointer-events: none;
+}
+
+.envelope-sparkles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.env-sparkle {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  color: var(--gold);
+  font-size: 14px;
+  opacity: 0.6;
+  animation: envSparkle 2.6s ease-in-out var(--delay) infinite alternate;
+}
+
+@keyframes envSparkle {
+  0% { transform: scale(0.6) rotate(0deg); opacity: 0.2; }
+  100% { transform: scale(1.3) rotate(45deg); opacity: 0.9; }
+}
+
+.royal-envelope-box {
+  position: relative;
+  width: min(480px, 92vw);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  perspective: 1200px;
+  user-select: none;
+}
+
+.envelope-pocket {
+  position: relative;
+  width: 100%;
+  background: linear-gradient(155deg, #4f1b20 0%, #3a1014 100%);
+  border-radius: 24px;
+  box-shadow:
+    0 30px 80px rgba(10, 2, 4, 0.65),
+    0 0 0 1.5px rgba(201, 170, 114, 0.45),
+    0 0 35px rgba(201, 170, 114, 0.15) inset;
+  padding: 30px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.envelope-gold-border {
+  position: absolute;
+  inset: 8px;
+  border-radius: 16px;
+  border: 1px solid rgba(201, 170, 114, 0.3);
+  pointer-events: none;
+}
+
+/* Plaque / Text Area inside envelope */
+.envelope-plaque {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  background: rgba(26, 7, 9, 0.45);
+  border: 1px solid rgba(201, 170, 114, 0.25);
+  border-radius: 16px;
+  padding: 24px 18px 22px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  backdrop-filter: blur(4px);
+}
+
+.envelope-crest-row {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--gold);
+  display: inline-flex;
+  align-items: center;
+}
+
+.envelope-honor-text {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 13px;
+  color: rgba(255, 250, 244, 0.88);
+  margin-top: 1px;
+}
+
+.envelope-divider-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 120px;
+  margin: 4px auto;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201, 170, 114, 0.5), transparent);
+}
+
+.divider-gem {
+  color: var(--gold);
+  font-size: 8px;
+  opacity: 0.8;
+}
+
+.envelope-celebrant-name {
+  font-family: var(--font-serif);
+  font-size: clamp(21px, 5.5vw, 27px);
+  color: #fffaf4;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+.envelope-occasion-tag {
+  font-size: 11px;
+  color: var(--gold-light);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.envelope-meta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: rgba(255, 250, 244, 0.75);
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.meta-bullet {
+  color: var(--gold);
+}
+
+/* Flap */
+.envelope-tri-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 48%;
+  background: linear-gradient(180deg, #5c2025 0%, #441519 100%);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  border-bottom: 1.5px solid rgba(201, 170, 114, 0.4);
+  transform-origin: top center;
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.royal-envelope-box.is-unfolding .envelope-tri-flap {
+  transform: rotateX(175deg);
+  opacity: 0.2;
+}
+
+/* Sliding Letter Peek */
+.envelope-sliding-letter {
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  right: 14px;
+  height: 90%;
+  background: var(--cream);
+  border-radius: 14px;
+  border: 1px solid rgba(201, 170, 114, 0.5);
+  z-index: 3;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.sliding-letter-card {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sliding-letter-tag {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--rose);
+  text-transform: uppercase;
+}
+
+.sliding-letter-name {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.sliding-letter-sub {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* Wax Seal Button */
+.royal-wax-seal {
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 78px;
+  height: 78px;
+  z-index: 10;
+  cursor: pointer;
+  filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.5));
+}
+
+.wax-seal-glow {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 210, 122, 0.45) 0%, transparent 70%);
+  animation: sealPulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes sealPulse {
+  0% { transform: scale(0.85); opacity: 0.4; }
+  100% { transform: scale(1.18); opacity: 0.95; }
+}
+
+.wax-seal-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.unseal-action-prompt {
+  margin-top: 24px;
+}
+
+.unseal-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 20px;
+  border-radius: 9999px;
+  background: rgba(255, 250, 244, 0.96);
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  border: 1px solid var(--gold);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.28),
+    0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+  animation: promptBounce 2s ease-in-out infinite;
+}
+
+@keyframes promptBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}

@@ -6,6 +6,7 @@ import { motion, AnimatePresence, useScroll, useTransform } from "motion/react"
 import { CursorProvider, HeartCursor, ClickHearts } from "@/components/ui/cursor"
 import { DraggableCardBody, DraggableCardContainer } from "@/components/ui/draggable-card"
 import { BirthdayPop } from "@/components/ui/birthday-pop"
+import { LockedEnvelope } from "@/components/ui/locked-envelope"
 
 /* ─── Baby Portraits with EXACT Matched Captions & Milestones ─── */
 const portraits = [
@@ -315,14 +316,8 @@ function HorizontalScrollLoader({ onComplete }: { onComplete: () => void }) {
   }, [finish])
 
   return (
-    <motion.div
+    <div
       className="cinema-loader"
-      initial={{ opacity: 1 }}
-      exit={{
-        opacity: 0,
-        pointerEvents: "none",
-        transition: { duration: 0.7, ease: "easeInOut" },
-      }}
       onClick={finish}
     >
       <div className="cinema-loader-body">
@@ -381,7 +376,7 @@ function HorizontalScrollLoader({ onComplete }: { onComplete: () => void }) {
           tap to enter ↗
         </button>
       </div>
-    </motion.div>
+    </div>
   )
 }
 
@@ -420,7 +415,7 @@ function calculateDurationLeft(): TimeRemaining {
 
 /* ─── Main Page ─── */
 export default function Page() {
-  const [hasEntered, setHasEntered] = React.useState(false)
+  const [entryPhase, setEntryPhase] = React.useState<"loading" | "locked" | "opened">("loading")
   const [lang, setLang] = React.useState<"en" | "ta">("en")
   const [popTriggerKey, setPopTriggerKey] = React.useState(0)
   const [timeLeft, setTimeLeft] = React.useState<TimeRemaining>(calculateDurationLeft)
@@ -528,10 +523,11 @@ export default function Page() {
     window.dispatchEvent(event)
   }, [])
 
-  // Handle Entrance from Loader -> Fire initial celebratory birthday pop & resume music if paused
-  const handleEntranceComplete = () => {
-    setHasEntered(true)
+  // Handle Opening the Wax-Sealed Invitation Envelope -> Unlocks landing page, pops confetti, and plays birthday song!
+  const handleEnvelopeOpen = () => {
+    setEntryPhase("opened")
     setPopTriggerKey(Date.now())
+    triggerHeartBurst()
     if (isMusicPlaying && audioRef.current?.paused) {
       audioRef.current.play().catch(() => {})
     }
@@ -566,17 +562,39 @@ export default function Page() {
       {/* Birthday Confetti Pop Canvas Effect */}
       <BirthdayPop triggerKey={popTriggerKey} />
 
-      {/* Cinematic Horizontal Loader Overlay */}
+      {/* 2-Step Grand Entrance: Horizontal Scroll Loader -> Locked Royal Wax-Sealed Envelope */}
       <AnimatePresence>
-        {!hasEntered && (
-          <HorizontalScrollLoader
-            key="cinema-loader"
-            onComplete={handleEntranceComplete}
-          />
+        {entryPhase !== "opened" && (
+          <motion.div
+            key="grand-entrance-wrapper"
+            className="grand-entrance-wrapper"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.7, ease: "easeInOut" } }}
+          >
+            {entryPhase === "loading" ? (
+              <HorizontalScrollLoader
+                key="cinema-loader"
+                onComplete={() => setEntryPhase("locked")}
+              />
+            ) : (
+              <LockedEnvelope
+                key="locked-envelope"
+                lang={lang}
+                onOpen={handleEnvelopeOpen}
+              />
+            )}
+          </motion.div>
         )}
       </AnimatePresence>
 
-      <div className={`invitation-page ${lang === "ta" ? "font-tamil-active" : ""}`}>
+      <div
+        className={`invitation-page ${lang === "ta" ? "font-tamil-active" : ""}`}
+        style={{
+          opacity: entryPhase === "opened" ? 1 : 0,
+          pointerEvents: entryPhase === "opened" ? "auto" : "none",
+          transition: "opacity 0.6s ease",
+        }}
+      >
         {/* Ambient Background with User's Uploaded Birthday Photo */}
         <motion.div
           className="ambient-bg-layer"
