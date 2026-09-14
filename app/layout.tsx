@@ -3,22 +3,29 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://first-birthday-invite.vercel.app'),
+  metadataBase: new URL('https://www.shrishtiika.site'),
   title: "Shrishtiika Dwaraknaath's 1st Birthday Invitation",
   description:
     'Saturday, 26th September 2026 · 6:00 PM – 8:00 PM · Zaitoon Velachery, Chennai',
+  alternates: {
+    canonical: 'https://www.shrishtiika.site',
+  },
   openGraph: {
     title: "Shrishtiika Dwaraknaath's 1st Birthday Invitation",
     description:
-      'Saturday, 26th September 2026 · 6:00 PM – 8:00 PM · Zaitoon Velachery',
+      'Saturday, 26th September 2026 · 6:00 PM – 8:00 PM · Zaitoon Velachery, Chennai',
+    url: 'https://www.shrishtiika.site',
+    siteName: "Shrishtiika's 1st Birthday",
     locale: 'en_IN',
     type: 'website',
     images: [
       {
-        url: '/og-image.png',
+        url: '/og-image.jpg',
+        secureUrl: 'https://www.shrishtiika.site/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: "Shrishtiika Dwaraknaath's 1st Birthday Celebration",
+        type: 'image/jpeg',
+        alt: "Shrishtiika Dwaraknaath's 1st Birthday Celebration Invitation",
       },
     ],
   },
@@ -26,8 +33,8 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: "Shrishtiika Dwaraknaath's 1st Birthday Invitation",
     description:
-      'Saturday, 26th September 2026 · 6:00 PM – 8:00 PM · Zaitoon Velachery',
-    images: ['/og-image.png'],
+      'Saturday, 26th September 2026 · 6:00 PM – 8:00 PM · Zaitoon Velachery, Chennai',
+    images: ['https://www.shrishtiika.site/og-image.jpg'],
   },
   icons: {
     icon: [
