@@ -144,8 +144,8 @@ const content = {
     musicMuted: "Muted",
 
     // Footer - exactly as requested: "built with love by daddy cool and cool mama's"
-    footerLove: "built with love by",
-    footerDad: "daddy cool",
+    footerLove: "Built with love by",
+    footerDad: "Daddy Cool",
     footerAnd: "and",
     footerMom: "cool mama's",
   },
@@ -451,7 +451,7 @@ export default function Page() {
       audio.play().catch(() => {
         // Modern browser autoplay policies require user interaction
         const startOnFirstGesture = () => {
-          audio.play().catch(() => {})
+          audio.play().catch(() => { })
           window.removeEventListener("pointerdown", startOnFirstGesture)
           window.removeEventListener("keydown", startOnFirstGesture)
         }
@@ -479,7 +479,7 @@ export default function Page() {
       audio.loop = true
       audio.volume = 0.28
       if (wasPlaying && isMusicPlaying) {
-        audio.play().catch(() => {})
+        audio.play().catch(() => { })
       }
     }
   }, [lang, isMusicPlaying])
@@ -492,7 +492,7 @@ export default function Page() {
       audio.pause()
       setIsMusicPlaying(false)
     } else {
-      audio.play().catch(() => {})
+      audio.play().catch(() => { })
       setIsMusicPlaying(true)
     }
   }
@@ -529,7 +529,7 @@ export default function Page() {
     setPopTriggerKey(Date.now())
     triggerHeartBurst()
     if (isMusicPlaying && audioRef.current?.paused) {
-      audioRef.current.play().catch(() => {})
+      audioRef.current.play().catch(() => { })
     }
   }
 

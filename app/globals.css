@@ -1647,194 +1647,59 @@ a, button, input {
 .envelope-pocket {
   position: relative;
   width: 100%;
-  background: linear-gradient(155deg, #4f1b20 0%, #3a1014 100%);
+  height: 330px;
+  background: linear-gradient(155deg, #4f1b20 0%, #360f13 100%);
   border-radius: 24px;
   box-shadow:
-    0 30px 80px rgba(10, 2, 4, 0.65),
-    0 0 0 1.5px rgba(201, 170, 114, 0.45),
-    0 0 35px rgba(201, 170, 114, 0.15) inset;
-  padding: 30px 22px;
+    0 30px 80px rgba(10, 2, 4, 0.7),
+    0 0 0 1.5px rgba(201, 170, 114, 0.5),
+    0 0 40px rgba(201, 170, 114, 0.15) inset;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
   overflow: visible;
 }
 
 .envelope-gold-border {
   position: absolute;
-  inset: 8px;
+  inset: 10px;
   border-radius: 16px;
-  border: 1px solid rgba(201, 170, 114, 0.3);
+  border: 1px solid rgba(201, 170, 114, 0.35);
   pointer-events: none;
 }
 
-/* Plaque / Text Area inside envelope */
-.envelope-plaque {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  background: rgba(26, 7, 9, 0.45);
-  border: 1px solid rgba(201, 170, 114, 0.25);
-  border-radius: 16px;
-  padding: 24px 18px 22px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  backdrop-filter: blur(4px);
-}
-
-.envelope-crest-row {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  color: var(--gold);
-  display: inline-flex;
-  align-items: center;
-}
-
-.envelope-honor-text {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 13px;
-  color: rgba(255, 250, 244, 0.88);
-  margin-top: 1px;
-}
-
-.envelope-divider-ornament {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 120px;
-  margin: 4px auto;
-}
-
-.divider-line {
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(201, 170, 114, 0.5), transparent);
-}
-
-.divider-gem {
-  color: var(--gold);
-  font-size: 8px;
-  opacity: 0.8;
-}
-
-.envelope-celebrant-name {
-  font-family: var(--font-serif);
-  font-size: clamp(21px, 5.5vw, 27px);
-  color: #fffaf4;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  line-height: 1.15;
-}
-
-.envelope-occasion-tag {
-  font-size: 11px;
-  color: var(--gold-light);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-
-.envelope-meta-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  color: rgba(255, 250, 244, 0.75);
-  text-transform: uppercase;
-  margin-top: 4px;
-}
-
-.meta-bullet {
-  color: var(--gold);
-}
-
-/* Flap */
+/* Flap at top (folds down to y=125px) */
 .envelope-tri-flap {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 48%;
+  height: 125px;
   background: linear-gradient(180deg, #5c2025 0%, #441519 100%);
   clip-path: polygon(0 0, 100% 0, 50% 100%);
-  border-bottom: 1.5px solid rgba(201, 170, 114, 0.4);
+  border-bottom: 1.5px solid rgba(201, 170, 114, 0.5);
   transform-origin: top center;
   transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-  z-index: 5;
+  z-index: 6;
   pointer-events: none;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
 }
 
 .royal-envelope-box.is-unfolding .envelope-tri-flap {
   transform: rotateX(175deg);
-  opacity: 0.2;
+  opacity: 0.15;
 }
 
-/* Sliding Letter Peek */
-.envelope-sliding-letter {
-  position: absolute;
-  top: 10px;
-  left: 14px;
-  right: 14px;
-  height: 90%;
-  background: var(--cream);
-  border-radius: 14px;
-  border: 1px solid rgba(201, 170, 114, 0.5);
-  z-index: 3;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-}
-
-.sliding-letter-card {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.sliding-letter-tag {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  color: var(--rose);
-  text-transform: uppercase;
-}
-
-.sliding-letter-name {
-  font-family: var(--font-serif);
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.sliding-letter-sub {
-  font-family: var(--font-serif);
-  font-size: 14px;
-  color: var(--muted);
-}
-
-/* Wax Seal Button */
+/* Wax Seal positioned at the flap tip (center at y=125px) */
 .royal-wax-seal {
   position: absolute;
-  top: 48%;
+  top: 125px;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 78px;
-  height: 78px;
+  width: 72px;
+  height: 72px;
   z-index: 10;
   cursor: pointer;
-  filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.55));
 }
 
 .wax-seal-glow {
@@ -1855,29 +1720,184 @@ a, button, input {
   height: 100%;
 }
 
-.unseal-action-prompt {
-  margin-top: 24px;
+/* Lower Plaque - Safely below the wax seal (starts at y=172px) */
+.envelope-lower-plaque {
+  position: absolute;
+  top: 172px;
+  left: 20px;
+  right: 20px;
+  bottom: 18px;
+  background: rgba(22, 5, 7, 0.5);
+  border: 1px solid rgba(201, 170, 114, 0.28);
+  border-radius: 14px;
+  padding: 14px 18px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  backdrop-filter: blur(4px);
+  z-index: 2;
 }
 
-.unseal-pill {
+.plaque-crest-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--gold);
+}
+
+.plaque-crest-text {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.plaque-sparkle {
+  color: var(--gold);
+  flex-shrink: 0;
+}
+
+.plaque-honor-text {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 12px;
+  color: rgba(255, 250, 244, 0.88);
+  line-height: 1.3;
+}
+
+.plaque-celebrant-name {
+  font-family: var(--font-serif);
+  font-size: clamp(20px, 5.2vw, 25px);
+  color: #fffaf4;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.plaque-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: rgba(255, 250, 244, 0.72);
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.plaque-meta-bullet {
+  color: var(--gold);
+}
+
+/* Sliding Letter Peek on Open */
+.envelope-sliding-letter {
+  position: absolute;
+  top: 14px;
+  left: 18px;
+  right: 18px;
+  height: 85%;
+  background: var(--cream);
+  border-radius: 14px;
+  border: 1px solid rgba(201, 170, 114, 0.5);
+  z-index: 4;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.sliding-letter-card {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sliding-letter-tag {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--rose);
+  text-transform: uppercase;
+}
+
+.sliding-letter-name {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.sliding-letter-sub {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* Action Prompt Button with Perfect Icon and Text Spacing */
+.unseal-action-prompt {
+  margin-top: 26px;
+  display: flex;
+  justify-content: center;
+}
+
+.unseal-action-btn {
   display: inline-flex;
   align-items: center;
-  padding: 8px 20px;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 24px;
   border-radius: 9999px;
   background: rgba(255, 250, 244, 0.96);
   color: var(--ink);
-  font-size: 11px;
+  font-family: var(--font-sans);
   font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  border: 1px solid var(--gold);
+  border: 1.5px solid var(--gold);
   box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.28),
-    0 0 0 1px rgba(255, 255, 255, 0.8) inset;
-  animation: promptBounce 2s ease-in-out infinite;
+    0 10px 30px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: promptFloat 2.4s ease-in-out infinite alternate;
 }
 
-@keyframes promptBounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
+.unseal-action-btn:hover {
+  transform: translateY(-2px) scale(1.04);
+  background: #fff;
+  box-shadow:
+    0 14px 36px rgba(201, 170, 114, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 1) inset;
+}
+
+.unseal-btn-icon {
+  flex-shrink: 0;
+  color: #c9aa72;
+  filter: drop-shadow(0 1px 3px rgba(201, 170, 114, 0.6));
+}
+
+.unseal-btn-label {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.unseal-btn-emoji {
+  font-size: 14px;
+  line-height: 1;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
+}
+
+@keyframes promptFloat {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-4px); }
 }

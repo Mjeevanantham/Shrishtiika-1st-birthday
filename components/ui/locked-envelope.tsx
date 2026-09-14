@@ -18,7 +18,7 @@ export function LockedEnvelope({ lang, onOpen }: LockedEnvelopeProps) {
     setIsOpening(true)
     setTimeout(() => {
       onOpen()
-    }, 1000)
+    }, 950)
   }
 
   const isTa = lang === "ta"
@@ -33,16 +33,16 @@ export function LockedEnvelope({ lang, onOpen }: LockedEnvelopeProps) {
     >
       <div className="envelope-ambient-glow" />
 
-      {/* Floating Sparkles around Envelope */}
+      {/* Floating Sparkles */}
       <div className="envelope-sparkles" aria-hidden="true">
         {Array.from({ length: 14 }).map((_, i) => (
           <span
             key={i}
             className="env-sparkle"
             style={{
-              "--x": `${(i * 7.5) % 100}%`,
-              "--y": `${10 + ((i * 19) % 80)}%`,
-              "--delay": `${(i * 0.25) % 3}s`,
+              "--x": `${(i * 7.2) % 100}%`,
+              "--y": `${8 + ((i * 18) % 84)}%`,
+              "--delay": `${(i * 0.22) % 3}s`,
             } as React.CSSProperties}
           >
             ✦
@@ -52,73 +52,21 @@ export function LockedEnvelope({ lang, onOpen }: LockedEnvelopeProps) {
 
       <motion.div
         className={`royal-envelope-box ${isOpening ? "is-unfolding" : ""}`}
-        initial={{ scale: 0.9, y: 20, opacity: 0 }}
+        initial={{ scale: 0.92, y: 25, opacity: 0 }}
         animate={{ scale: 1, y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
       >
-        {/* The Envelope Pocket Background */}
+        {/* The Envelope Pocket */}
         <div className="envelope-pocket">
           {/* Gold Decorative Corner Borders */}
           <div className="envelope-gold-border" />
 
-          {/* Letter Inside that slides up on opening */}
-          <motion.div
-            className="envelope-sliding-letter"
-            animate={isOpening ? { y: -140, opacity: 1 } : { y: 0, opacity: 0 }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <div className="sliding-letter-card">
-              <span className="sliding-letter-tag">
-                {isTa ? "முதல் பிறந்தநாள் விழா" : "1ST BIRTHDAY CELEBRATION"}
-              </span>
-              <h3 className="sliding-letter-name">
-                {isTa ? "ஸ்ரிஷ்டிகா" : "Shrishtiika"}
-              </h3>
-              <p className="sliding-letter-sub">
-                {isTa ? "த்வர்கநாத்" : "Dwaraknaath"}
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Envelope Body Content (Crisp, High-Contrast Gold Foil Typography) */}
-          <div className="envelope-plaque">
-            <div className="envelope-crest-row">
-              <Sparkles size={12} className="text-gold inline mr-1.5" />
-              <span>{isTa ? "அரச அழைப்பிதழ்" : "ROYAL INVITATION"}</span>
-              <Sparkles size={12} className="text-gold inline ml-1.5" />
-            </div>
-
-            <p className="envelope-honor-text">
-              {isTa
-                ? "எங்கள் அன்பான குடும்பத்தினருக்கும் நண்பர்களுக்கும்"
-                : "To Our Beloved Family & Friends"}
-            </p>
-
-            <div className="envelope-divider-ornament">
-              <span className="divider-line" />
-              <span className="divider-gem">◆</span>
-              <span className="divider-line" />
-            </div>
-
-            <h2 className="envelope-celebrant-name">
-              {isTa ? "ஸ்ரிஷ்டிகாவின் 1வது பிறந்தநாள்" : "Shrishtiika's 1st Birthday"}
-            </h2>
-
-            <p className="envelope-occasion-tag">
-              {isTa ? "மகிழ்ச்சியான முதல் ஆண்டு கொண்டாட்டம்" : "One Little Year of Magic & Love"}
-            </p>
-
-            <div className="envelope-meta-pill">
-              <span>{isTa ? "26 செப்டம்பர் 2026" : "Saturday, 26th September 2026"}</span>
-              <span className="meta-bullet">•</span>
-              <span>{isTa ? "சென்னை" : "Chennai"}</span>
-            </div>
+          {/* Top Flap (Folds down to 38% height, seals at tip) */}
+          <div className="envelope-tri-flap">
+            <div className="tri-flap-gold-accent" />
           </div>
 
-          {/* Top Flap with 3D Fold */}
-          <div className="envelope-tri-flap" />
-
-          {/* Wax Seal placed centrally over the flap joint */}
+          {/* Wax Seal - Positioned cleanly at the apex of the flap */}
           <motion.div
             className={`royal-wax-seal ${isOpening ? "is-broken" : ""}`}
             animate={
@@ -182,14 +130,68 @@ export function LockedEnvelope({ lang, onOpen }: LockedEnvelopeProps) {
               </defs>
             </svg>
           </motion.div>
+
+          {/* Letter Inside that glides up smoothly when unsealing */}
+          <motion.div
+            className="envelope-sliding-letter"
+            animate={isOpening ? { y: -130, opacity: 1 } : { y: 0, opacity: 0 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="sliding-letter-card">
+              <span className="sliding-letter-tag">
+                {isTa ? "முதல் பிறந்தநாள் விழா" : "1ST BIRTHDAY CELEBRATION"}
+              </span>
+              <h3 className="sliding-letter-name">
+                {isTa ? "ஸ்ரிஷ்டிகா" : "Shrishtiika"}
+              </h3>
+              <p className="sliding-letter-sub">
+                {isTa ? "த்வர்கநாத்" : "Dwaraknaath"}
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Lower Plaque - Positioned safely below the wax seal so text is NEVER covered */}
+          <div className="envelope-lower-plaque">
+            <div className="plaque-crest-row">
+              <Sparkles size={11} className="plaque-sparkle text-gold" />
+              <span className="plaque-crest-text">
+                {isTa ? "அரச அழைப்பிதழ்" : "ROYAL INVITATION"}
+              </span>
+              <Sparkles size={11} className="plaque-sparkle text-gold" />
+            </div>
+
+            <p className="plaque-honor-text">
+              {isTa
+                ? "எங்கள் அன்பான குடும்பத்தினருக்கும் நண்பர்களுக்கும்"
+                : "To Our Beloved Family & Friends"}
+            </p>
+
+            <h2 className="plaque-celebrant-name">
+              {isTa ? "ஸ்ரிஷ்டிகாவின் 1வது பிறந்தநாள்" : "Shrishtiika's 1st Birthday"}
+            </h2>
+
+            <div className="plaque-meta-row">
+              <span>{isTa ? "26 செப்டம்பர் 2026" : "Saturday, 26th September 2026"}</span>
+              <span className="plaque-meta-bullet">•</span>
+              <span>{isTa ? "சென்னை" : "Chennai"}</span>
+            </div>
+          </div>
         </div>
 
-        {/* Pulsing Action Prompt Below Envelope */}
+        {/* Perfectly Aligned Action Button with Clear Spacing */}
         <div className="unseal-action-prompt">
-          <span className="unseal-pill">
-            <Sparkles size={13} className="text-gold inline mr-1.5" />
-            {isTa ? "முத்திரையை உடைத்து திறக்க தொடவும் ✉️" : "Tap seal to open invitation ✉️"}
-          </span>
+          <button
+            type="button"
+            className="unseal-action-btn"
+            onClick={handleOpen}
+            aria-label={isTa ? "அழைப்பிதழை திறக்க தொடவும்" : "Tap to open invitation"}
+          >
+            <Sparkles size={14} className="unseal-btn-icon" />
+            <span className="unseal-btn-label">
+              {isTa ? "அழைப்பிதழை திறக்க தொடவும்" : "Tap to Open Invitation"}
+            </span>
+            <span className="unseal-btn-emoji" aria-hidden="true">✉️</span>
+          </button>
         </div>
       </motion.div>
     </div>
